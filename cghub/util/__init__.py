@@ -61,3 +61,13 @@ def properties( obj ):
     return dict( (attr, getattr( obj, attr ))
         for attr in dir( obj )
         if not attr.startswith( '__' ) )
+
+
+def ilen(it):
+    """
+    Return the number of elements in an iterable
+
+    >>> ilen(xrange(0,100))
+    100
+    """
+    return sum( 1 for _ in it )
