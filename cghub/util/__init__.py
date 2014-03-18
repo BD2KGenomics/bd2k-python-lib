@@ -27,13 +27,11 @@ def memoize( f ):
     """
     memory = { }
 
-
     @wraps( f )
     def new_f( *args ):
         if args not in memory:
             memory[ args ] = f( *args )
         return memory[ args ]
-
 
     return new_f
 
@@ -121,3 +119,12 @@ def rfc3339_datetime_re( anchor=True ):
         ( '^' if anchor else '' ) +
         '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})' +
         ( '$' if anchor else '' ) )
+
+
+def strict_bool( s ):
+    if s == 'True':
+        return True
+    elif s == 'False':
+        return False
+    else:
+        raise ValueError( 'Not a valid bool literal' )
