@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="cghub-python-lib",
+    name="bd2k-python-lib",
     version="1.5.dev1",
     packages=find_packages( ),
     install_requires=[ ],
-    namespace_packages=[ 'cghub' ]
+    namespace_packages=[ 'bd2k' ]
 )

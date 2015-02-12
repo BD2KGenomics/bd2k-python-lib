@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import time
 import threading
-from cghub.util.threading import BoundedEmptySemaphore
+from bd2k.util.threading import BoundedEmptySemaphore
 
 
 class GlobalThrottle:
