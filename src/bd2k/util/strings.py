@@ -2,6 +2,33 @@
 
 import inspect
 
+def to_english(input_list, separator=", ", conjunction="and ", empty="empty", wrapper=None):
+    """
+    convert list to a more natural and readable string.
+
+    :param input_list: list of any type, as long as it can be cast to string
+    :param separator: char (or string) to insert between elements in list
+    :param conjunction: string used to connect the final element in list
+    :param empty: a string used to represent an empty list.
+    :param wrapper: char or string to surround the elements in the list
+    :return: string
+
+    ex:
+    >>> to_english(['a','b','c'], wrapper='*')
+    "*a*, *b*, and *c*"
+    """
+    if len(input_list)==0:
+        return empty
+    if any(not isinstance(element, str) for element in input_list):
+        input_list = map(str, input_list)
+    if wrapper is not None:
+        formatter="%s{}%s" %( wrapper, wrapper)
+        input_list = map(formatter.format, input_list)
+    last_element=input_list.pop()
+    english_list = separator.join(input_list)
+    if len(input_list)!=0:
+        english_list+=separator+conjunction
+    return english_list+last_element
 
 def interpolate( template, skip_frames=0, **kwargs ):
     """
