@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="bd2k-python-lib",
-    version="1.7.dev1",
+    version="1.8.dev1",
 
     author='Hannes Schmidt',
     author_email='hannes@ucsc.edu',
