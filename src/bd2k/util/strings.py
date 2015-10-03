@@ -2,33 +2,67 @@
 
 import inspect
 
-def to_english(input_list, separator=", ", conjunction="and ", empty="empty", wrapper=None):
-    """
-    convert list to a more natural and readable string.
 
-    :param input_list: list of any type, as long as it can be cast to string
-    :param separator: char (or string) to insert between elements in list
-    :param conjunction: string used to connect the final element in list
-    :param empty: a string used to represent an empty list.
-    :param wrapper: char or string to surround the elements in the list
-    :return: string
-
-    ex:
-    >>> to_english(['a','b','c'], wrapper='*')
-    "*a*, *b*, and *c*"
+def to_english( iterable, separator=", ", conjunction=' and ', empty='empty',
+                wrapper=None, pair_conjunction=None):
     """
-    if len(input_list)==0:
+    Convert list to a string containing an enumeration in plain English.
+
+    :param iterable: an iterable of strings or objects that can be cast to a string
+
+    :param separator: the text to insert between elements
+
+    :param conjunction: the text used to connect the final element
+
+    :param empty: the text to be used to represent an empty iterable
+
+    :param wrapper: the text to surround the elements
+
+    :param pair_conjunction: the conjunction to use between elements if there are exactly two of
+                             them, defaults to conjunction
+
+    >>> to_english( [], empty='nada' )
+    'nada'
+    >>> to_english( [ 1 ] )
+    '1'
+    >>> to_english( [ 1, 2 ], conjunction=' or ' )
+    '1 or 2'
+    >>> to_english( [ 1, 2, 3 ], conjunction=' or ')
+    '1, 2 or 3'
+    >>> to_english( [ 1, 2, 3 ], separator='; ', conjunction=' or ')
+    '1; 2 or 3'
+    >>> to_english( [ 1, 2, 3 ], conjunction=', and ', pair_conjunction=' and ' )
+    '1, 2, and 3'
+    >>> to_english( [ 1, 2 ], conjunction=', and ', pair_conjunction=' and ' )
+    '1 and 2'
+    >>> to_english( [ 1 ], conjunction=', and ', pair_conjunction=' and ' )
+    '1'
+    """
+    i = iter( iterable )
+    try:
+        x = i.next( )
+    except StopIteration:
         return empty
-    if any(not isinstance(element, str) for element in input_list):
-        input_list = map(str, input_list)
-    if wrapper is not None:
-        formatter="%s{}%s" %( wrapper, wrapper)
-        input_list = map(formatter.format, input_list)
-    last_element=input_list.pop()
-    english_list = separator.join(input_list)
-    if len(input_list)!=0:
-        english_list+=separator+conjunction
-    return english_list+last_element
+    r = [ ]
+    while True:
+        x = str( x )
+        if wrapper is not None:
+            x = wrapper + x + wrapper
+        try:
+            n = i.next( )
+        except StopIteration:
+            if len(r) > 2:
+                r.append( conjunction )
+            elif len(r) > 0:
+                r.append( conjunction if pair_conjunction is None else pair_conjunction )
+            r.append( x )
+            break
+        else:
+            if r: r.append( separator )
+            r.append( x )
+            x = n
+    return ''.join( r )
+
 
 def interpolate( template, skip_frames=0, **kwargs ):
     """
