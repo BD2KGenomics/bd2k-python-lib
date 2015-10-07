@@ -79,7 +79,7 @@ test:
 	$(python) setup.py test --pytest-args "-vv $(tests)"
 
 pypi: check_clean_working_copy
-	$(python) setup.py egg_info register sdist bdist_egg upload
+	$(python) setup.py egg_info sdist bdist_egg upload
 
 _pypi:
 	- rm -rf build/
