@@ -81,7 +81,6 @@ class ElementMaker(object):
     examples::
 
         >>> import xml.etree.ElementTree as ET
-        >>> from bd2k.util.xml.builder import E
 
         >>> ET.tostring(E("tag"))
         '<tag />'
