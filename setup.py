@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="bd2k-python-lib",
-    version="1.8.dev4",
+    version="1.9.dev1",
 
     author='Hannes Schmidt',
     author_email='hannes@ucsc.edu',
@@ -12,5 +12,6 @@ setup(
     package_dir={ '': 'src' },
     packages=find_packages( 'src' ),
     install_requires=[ ],
-    namespace_packages=[ 'bd2k' ]
-)
+    tests_require=[
+        'mock==1.0.1' ],
+    namespace_packages=[ 'bd2k' ] )
