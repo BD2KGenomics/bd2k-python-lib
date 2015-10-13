@@ -1,7 +1,9 @@
+from __future__ import absolute_import
 from functools import wraps
 import pwd
 import grp
 import re
+from threading import Lock
 
 
 def uid_to_name( uid ):
@@ -23,15 +25,50 @@ def name_to_gid( name ):
 def memoize( f ):
     """
     A decorator that memoizes a function result based on its parameters. For example, this can be
-    used in place of lazy initialization.
+    used in place of lazy initialization. If the decorating function is invoked by multiple
+    threads, the decorated function may be called more than once with the same arguments.
     """
+
+    # TODO: Recommend that f's arguments be immutable
+
     memory = { }
 
     @wraps( f )
     def new_f( *args ):
-        if args not in memory:
-            memory[ args ] = f( *args )
-        return memory[ args ]
+        try:
+            return memory[ args ]
+        except KeyError:
+            r = f( *args )
+            memory[ args ] = r
+            return r
+
+    return new_f
+
+
+def sync_memoize( f ):
+    """
+    Like memoize, but guarantees that decorated function is only called once, even when multiple
+    threads are calling the decorating function with multiple parameters.
+    """
+
+    # TODO: Think about an f that is recursive
+
+    memory = { }
+    lock = Lock()
+
+    @wraps( f )
+    def new_f( *args ):
+        try:
+            return memory[ args ]
+        except KeyError:
+            # on cache misses, retry with lock held
+            with lock:
+                try:
+                    return memory[ args ]
+                except KeyError:
+                    r = f( *args )
+                    memory[ args ] = r
+                    return r
 
     return new_f
 
@@ -60,8 +97,8 @@ def properties( obj ):
     that getter.
     """
     return dict( (attr, getattr( obj, attr ))
-        for attr in dir( obj )
-        if not attr.startswith( '__' ) )
+                     for attr in dir( obj )
+                     if not attr.startswith( '__' ) )
 
 
 def ilen( it ):
@@ -116,9 +153,9 @@ def rfc3339_datetime_re( anchor=True ):
     True
     """
     return re.compile(
-        ( '^' if anchor else '' ) +
+        ('^' if anchor else '') +
         '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})' +
-        ( '$' if anchor else '' ) )
+        ('$' if anchor else '') )
 
 
 def strict_bool( s ):
