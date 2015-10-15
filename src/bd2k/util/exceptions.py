@@ -7,7 +7,7 @@ def panic( log=None ):
     """
     The Python idiom for reraising a primary exception fails when the except block raises a
     secondary exception, e.g. while trying to cleanup. In that case the original exception is
-    lost and the secondary exception is reraised. The solution seems to be to safe the primary
+    lost and the secondary exception is reraised. The solution seems to be to save the primary
     exception info as returned from sys.exc_info() and then reraise that.
 
     This is a contextmanager that should be used like this
