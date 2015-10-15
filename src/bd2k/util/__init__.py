@@ -54,7 +54,7 @@ def sync_memoize( f ):
     # TODO: Think about an f that is recursive
 
     memory = { }
-    lock = Lock()
+    lock = Lock( )
 
     @wraps( f )
     def new_f( *args ):
@@ -164,4 +164,4 @@ def strict_bool( s ):
     elif s == 'False':
         return False
     else:
-        raise ValueError( 'Not a valid bool literal' )
+        raise ValueError( s )
