@@ -45,7 +45,7 @@ def flatten( iterables ):
     return chain.from_iterable( iterables )
 
 
-class cons( object ):
+class concat( object ):
     """
     A literal iterable that lets you combine sequence literals (lists, set) with generators or list
     comprehensions. Instead of
@@ -55,47 +55,47 @@ class cons( object ):
 
     you can write
 
-    >>> list( cons( -1, ( x * 2 for x in range( 3 ) ), -1 ) )
+    >>> list( concat( -1, ( x * 2 for x in range( 3 ) ), -1 ) )
     [-1, 0, 2, 4, -1]
 
     This is slightly shorter (not counting the list constructor) and does not involve array
     construction or concatenation.
 
-    Note that cons() flattens (or chains) all iterable arguments into a single result iterable:
+    Note that concat() flattens (or chains) all iterable arguments into a single result iterable:
 
-    >>> list( cons( 1, xrange( 2, 4 ), 4 ) )
+    >>> list( concat( 1, xrange( 2, 4 ), 4 ) )
     [1, 2, 3, 4]
 
-    If you want to prevent that flattening for an iterable argument, wrap it in cons():
+    If you want to prevent that flattening for an iterable argument, wrap it in concat():
 
-    >>> list( cons( 1, cons( xrange( 2, 4 ) ), 4 ) )
+    >>> list( concat( 1, concat( xrange( 2, 4 ) ), 4 ) )
     [1, xrange(2, 4), 4]
 
     Some more example.
 
-    >>> list( cons() )
+    >>> list( concat() )
     []
-    >>> list( cons( 1 ) )
+    >>> list( concat( 1 ) )
     [1]
-    >>> list( cons( cons() ) )
+    >>> list( concat( concat() ) )
     []
-    >>> list( cons( cons( 1 ) ) )
+    >>> list( concat( concat( 1 ) ) )
     [1]
-    >>> list( cons( 1, cons( 2 ), 3 ) )
+    >>> list( concat( 1, concat( 2 ), 3 ) )
     [1, 2, 3]
-    >>> list( cons( 1, 2, cons( 3, 4 ), 5, 6 ) )
+    >>> list( concat( 1, 2, concat( 3, 4 ), 5, 6 ) )
     [1, 2, 3, 4, 5, 6]
 
-    Note that while strings are technically iterable, cons() does not flatten them.
+    Note that while strings are technically iterable, concat() does not flatten them.
 
-    >>> list( cons( 'ab' ) )
+    >>> list( concat( 'ab' ) )
     ['ab']
-    >>> list( cons( cons( 'ab' ) ) )
+    >>> list( concat( concat( 'ab' ) ) )
     ['ab']
     """
 
     def __init__( self, *args ):
-        super( cons, self ).__init__( )
+        super( concat, self ).__init__( )
         self.args = args
 
     def __iter__( self ):
@@ -105,7 +105,7 @@ class cons( object ):
             except AttributeError:
                 i = x,
             else:
-                if isinstance( x, cons ):
+                if isinstance( x, concat ):
                     i = x.args
             return i
 
