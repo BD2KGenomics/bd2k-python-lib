@@ -65,7 +65,7 @@ clean_sdist:
 
 .PHONY: test
 test: _check_venv
-	$(python) setup.py test --pytest-args "-vv $(tests)"
+	$(python) setup.py test --pytest-args "-vv --assert=plain $(tests)"
 
 
 .PHONY: pypi
