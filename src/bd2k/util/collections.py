@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import collections
+from itertools import dropwhile
 
 
 class OrderedSet( collections.MutableSet ):
@@ -118,3 +119,44 @@ class OrderedSet( collections.MutableSet ):
 
     def union(self,other):
         self |= other
+
+
+def rindex( l, v ):
+    """
+    Like l.index(v) but finds last occurrence of value v in sequence l.
+
+    :type l: anything
+
+    >>> rindex( [0], 0 )
+    0
+    >>> rindex( [0,0], 0 )
+    1
+    >>> rindex( [0,1], 0 )
+    0
+    >>> rindex( [0,1,0,1], 0 )
+    2
+    >>> rindex( [0,1,0,1], 1 )
+    3
+    >>> rindex( [0], 1 )
+    Traceback (most recent call last):
+    ...
+    ValueError: 1
+    >>> rindex( [None], None )
+    0
+    >>> rindex( [], None )
+    Traceback (most recent call last):
+    ...
+    ValueError: None
+    >>> rindex( "0101", '0')
+    2
+    >>> rindex( (0,1,0,1), 0 )
+    2
+    >>> rindex( xrange(3), 2 )
+    2
+    """
+    try:
+        n = next( dropwhile( lambda (i, x): v != x, enumerate( reversed( l ), 1 ) ) )[ 0 ]
+    except StopIteration:
+        raise ValueError( v )
+    else:
+        return len( l ) - n
