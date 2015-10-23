@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 kwargs = dict(
     name="bd2k-python-lib",
-    version="1.10.dev3",
+    version="1.10.dev4",
 
     author='Hannes Schmidt',
     author_email='hannes@ucsc.edu',
