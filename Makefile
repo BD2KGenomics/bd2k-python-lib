@@ -69,7 +69,7 @@ test: _check_venv
 
 
 .PHONY: pypi
-pypi: _check_venv _check_clean_working_copy
+pypi: _check_venv _check_clean_working_copy test
 	$(python) setup.py egg_info sdist bdist_egg upload
 
 
