@@ -37,10 +37,10 @@ class InnerClass( object ):
     >>> o = Outer()
     >>> i = o.new_inner()
     >>> i # doctest: +ELLIPSIS
-    <objects.Inner object at ...> bound to <objects.Outer object at ...>
+    <bd2k.util.objects.Inner object at ...> bound to <bd2k.util.objects.Outer object at ...>
 
     >>> i.get_outer() # doctest: +ELLIPSIS
-    <objects.Outer object at ...>
+    <bd2k.util.objects.Outer object at ...>
 
     Now with inheritance for both inner and outer:
 
@@ -55,18 +55,18 @@ class InnerClass( object ):
     >>> derived_outer = DerivedOuter()
     >>> derived_inner = derived_outer.new_inner()
     >>> derived_inner # doctest: +ELLIPSIS
-    <objects.DerivedInner object at ...> bound to <objects.DerivedOuter object at ...>
+    <bd2k.util.objects.DerivedInner object at ...> bound to <bd2k.util.objects.DerivedOuter object at ...>
 
     >>> derived_inner.get_outer() # doctest: +ELLIPSIS
-    <objects.DerivedOuter object at ...>
+    <bd2k.util.objects.DerivedOuter object at ...>
 
     Test a static references:
     >>> Outer.Inner
-    <class 'objects.Inner'>
+    <class 'bd2k.util.objects.Inner'>
     >>> DerivedOuter.Inner
-    <class 'objects.Inner'>
+    <class 'bd2k.util.objects.Inner'>
     >>> DerivedOuter.DerivedInner
-    <class 'objects.DerivedInner'>
+    <class 'bd2k.util.objects.DerivedInner'>
 
     Can't decorate top-level classes. Unfortunately, this is detected when the instance is
     created, not when the class is defined.
