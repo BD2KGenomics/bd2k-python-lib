@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from bd2k.util import sync_memoize
 
 
