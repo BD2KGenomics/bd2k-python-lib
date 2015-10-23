@@ -1,6 +1,6 @@
 import sys
 
-assert sys.version_info >= (2, 7)
+assert sys.version_info >= (2, 6)
 
 from setuptools import setup, find_packages
 
