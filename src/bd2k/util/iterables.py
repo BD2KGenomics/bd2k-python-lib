@@ -73,18 +73,26 @@ class concat( object ):
 
     Some more example.
 
-    >>> list( concat() )
+    >>> list( concat() ) # empty concat
     []
-    >>> list( concat( 1 ) )
+    >>> list( concat( 1 ) ) # non-iterable singleton
     [1]
-    >>> list( concat( concat() ) )
+    >>> list( concat( concat() ) ) # empty, iterable singleton
     []
-    >>> list( concat( concat( 1 ) ) )
+    >>> list( concat( concat( 1 ) ) ) # singleton singleton
     [1]
     >>> list( concat( 1, concat( 2 ), 3 ) )
     [1, 2, 3]
+    >>> list( concat( 1, [2], 3 ) ) # flattened iterable
+    [1, 2, 3]
+    >>> list( concat( 1, concat( [2] ), 3 ) ) # protecting an iterable from being flattened
+    [1, [2], 3]
+    >>> list( concat( 1, concat( [2], 3 ), 4 ) ) # protection only works with a single argument
+    [1, 2, 3, 4]
     >>> list( concat( 1, 2, concat( 3, 4 ), 5, 6 ) )
     [1, 2, 3, 4, 5, 6]
+    >>> list( concat( 1, 2, concat( [ 3, 4 ] ), 5, 6 ) )
+    [1, 2, [3, 4], 5, 6]
 
     Note that while strings are technically iterable, concat() does not flatten them.
 
@@ -100,13 +108,13 @@ class concat( object ):
 
     def __iter__( self ):
         def expand( x ):
-            try:
-                i = x.__iter__( )
-            except AttributeError:
-                i = x,
+            if isinstance( x, concat ) and len( x.args ) == 1:
+                i = x.args
             else:
-                if isinstance( x, concat ):
-                    i = x.args
+                try:
+                    i = x.__iter__( )
+                except AttributeError:
+                    i = x,
             return i
 
         return flatten( imap( expand, self.args ) )
