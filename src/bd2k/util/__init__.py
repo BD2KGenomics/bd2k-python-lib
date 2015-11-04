@@ -159,9 +159,24 @@ def rfc3339_datetime_re( anchor=True ):
 
 
 def strict_bool( s ):
+    """
+    Variant of bool() that only accepts two possible string values.
+    """
     if s == 'True':
         return True
     elif s == 'False':
         return False
     else:
         raise ValueError( s )
+
+
+def less_strict_bool( x ):
+    """
+    Idempotent and None-safe version of strict_bool.
+    """
+    if x is None:
+        return False
+    elif x is True or x is False:
+        return x
+    else:
+        return strict_bool( x )
