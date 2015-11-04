@@ -36,6 +36,27 @@ class Expando(dict):
 
     >>> json.dumps(o)
     '{"foo": 42, "bar": "hi"}'
+
+    Attributes can be deleted, too:
+
+    >>> o = Expando(foo=42)
+    >>> o.foo
+    42
+    >>> del o.foo
+    >>> o.foo
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Expando' object has no attribute 'foo'
+    >>> o['foo']
+    Traceback (most recent call last):
+    ...
+    KeyError: 'foo'
+
+    >>> del o.foo
+    Traceback (most recent call last):
+    ...
+    AttributeError: foo
+
     """
 
     def __init__( self, *args, **kwargs ):
