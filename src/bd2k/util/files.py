@@ -14,6 +14,20 @@ def mkdir_p( path ):
         else:
             raise
 
+
+def rm_f( path ):
+    """
+    Remove the file at the given path with os.remove(), ignoring errors caused by the file's absence.
+    """
+    try:
+        os.remove( path )
+    except OSError as e:
+        if e.errno == errno.ENOENT:
+            pass
+        else:
+            raise
+
+
 if False:
 
     # These are not needed for Python 2.7 as Python's builtin file object's read() and write()
