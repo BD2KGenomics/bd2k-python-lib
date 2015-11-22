@@ -1,7 +1,7 @@
 from __future__ import absolute_import
-import logging
 import sys
 import threading
+
 
 class BoundedEmptySemaphore( threading._BoundedSemaphore ):
     """
@@ -46,3 +46,20 @@ class ExceptionalThread( threading.Thread ):
             type, value, traceback = self.exc_info
             self.exc_info = None
             raise type, value, traceback
+
+
+# noinspection PyPep8Naming
+class defaultlocal( threading.local ):
+    """
+    Thread local storage with default values for each field in each thread
+
+    >>> l = defaultlocal( foo=42 )
+    >>> def f(): print l.foo
+    >>> t = threading.Thread(target=f)
+    >>> t.start() ; t.join()
+    42
+    """
+
+    def __init__( self, **kwargs ):
+        super( defaultlocal, self ).__init__( )
+        self.__dict__.update( kwargs )
