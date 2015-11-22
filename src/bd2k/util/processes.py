@@ -7,12 +7,12 @@ def which( name, path=None ):
     or the directories listed in the PATH variable of the current environment. Roughly the
     equivalent of the `which` program. Does not work on Windows.
 
-    :param executable_name: the name of the program
+    :type name: str
+    :param name: the name of the program
 
-    :type executable_name: str
-
-    :param path: an iterable of directory paths to consider or None if the PATH environment
-    variable should be used
+    :type path: Iterable
+    :param path: the directory paths to consider or None if the directories referenced in the
+    PATH environment variable should be used instead
 
     :returns: an iterator yielding the full path to every occurrance of an executable file of the
     given name in a directory on the given path or the PATH environment variable if no path was
