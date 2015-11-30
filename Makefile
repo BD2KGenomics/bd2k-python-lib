@@ -14,18 +14,22 @@
 
 define help
 
-Supported targets: 'develop', 'sdist', 'clean', 'test', 'pypi'
+Supported targets: 'develop', 'sdist', 'clean', 'test', 'pypi', or 'pypi_stable'.
 
 The 'develop' target creates an editable install (aka develop mode).
 
-The 'sdist' target creates a source distribution.
+The 'sdist' target creates a source distribution of this project.
 
 The 'clean' target undoes the effect of 'develop' and 'sdist'.
 
 The 'test' target runs unit tests. Set the 'tests' variable to run a particular test.
 
-The 'pypi' target publishes the current commit of Toil to PyPI after enforcing that the working
-copy and the index are clean, and tagging it as an unstable .dev build.
+The 'pypi' target publishes the current commit of this project to PyPI after enforcing that the
+working copy and the index are clean, and tagging it as an unstable .dev build.
+
+The 'pypi_stable' target is like 'pypi' except that it doesn't tag the build as
+an unstable build. IOW, it publishes a stable release.
+
 
 endef
 export help
@@ -69,17 +73,29 @@ test: _check_venv
 
 
 .PHONY: pypi
-pypi: _check_venv _check_clean_working_copy test
-	$(python) setup.py egg_info sdist bdist_egg upload
+pypi: _check_clean_working_copy _check_running_on_jenkins
+	@test "$$(git rev-parse --verify remotes/origin/master)" != "$$(git rev-parse --verify HEAD)" \
+		&& echo "Not on master branch, silently skipping deployment to PyPI." \
+		|| $(python) setup.py egg_info --tag-build=.dev$$BUILD_NUMBER sdist bdist_egg upload
+
+
+.PHONY: pypi_stable
+pypi_stable: _check_clean_working_copy _check_running_on_jenkins
+	test "$$(git rev-parse --verify remotes/origin/master)" != "$$(git rev-parse --verify HEAD)" \
+		&& echo "Not on master branch, silently skipping deployment to PyPI." \
+		|| $(python) setup.py egg_info register sdist bdist_egg upload
 
 
 .PHONY: clean_pypi
-clean_pypi: clean_sdist
+clean_pypi:
 	- rm -rf build/
 
 
 .PHONY: clean
 clean: clean_develop clean_sdist clean_pypi
+	-rm -rf __pychache__
+	-rm -rf .cache .eggs
+	find . -name '*.pyc' | xargs rm
 
 
 .PHONY: _check_venv
@@ -99,3 +115,10 @@ _check_clean_working_copy:
 		|| ( echo "$(red)You have are untracked files:$(normal)" \
 			; git ls-files --other --exclude-standard --directory \
 			; false )
+
+
+.PHONY: _check_running_on_jenkins
+_check_running_on_jenkins:
+	@echo "$(green)Checking if running on Jenkins ...$(normal)"
+	test -n "$$BUILD_NUMBER" \
+		|| ( echo "$(red)This target should only be invoked on Jenkins.$(normal)" ; false )
