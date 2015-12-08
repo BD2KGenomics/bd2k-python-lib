@@ -57,12 +57,42 @@ class Expando(dict):
     ...
     AttributeError: foo
 
+    And copied:
+
+    >>> o = Expando(foo=42)
+    >>> p = o.copy()
+    >>> isinstance(p,Expando)
+    True
+    >>> o == p
+    True
+    >>> o is p
+    False
+
+    Same with MagicExpando ...
+
+    >>> o = MagicExpando()
+    >>> o.foo.bar = 42
+    >>> p = o.copy()
+    >>> isinstance(p,MagicExpando)
+    True
+    >>> o == p
+    True
+    >>> o is p
+    False
+
+    ... but the copy is shallow:
+
+    >>> o.foo is p.foo
+    True
     """
 
     def __init__( self, *args, **kwargs ):
         super( Expando, self ).__init__( *args, **kwargs )
         self.__slots__ = None
         self.__dict__ = self
+
+    def copy(self):
+        return type(self)(self)
 
 class MagicExpando(Expando):
     """
