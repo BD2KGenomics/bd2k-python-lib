@@ -21,24 +21,40 @@ class ExceptionalThread( threading.Thread ):
     joined the thread. If join() times out, no exception will be re reraised even though an
     exception might already have occured in run().
 
+    When subclassing this thread, override tryRun() instead of run().
+
     >>> def f():
-    ...     assert False
+    ...     assert 0
     >>> t = ExceptionalThread(target=f)
     >>> t.start()
     >>> t.join()
     Traceback (most recent call last):
     ...
     AssertionError
+
+    >>> class MyThread(ExceptionalThread):
+    ...     def tryRun( self ):
+    ...         assert 0
+    >>> t = MyThread()
+    >>> t.start()
+    >>> t.join()
+    Traceback (most recent call last):
+    ...
+    AssertionError
+
     """
 
     exc_info = None
 
     def run( self ):
         try:
-            super( ExceptionalThread, self ).run( )
+            self.tryRun( )
         except:
             self.exc_info = sys.exc_info( )
             raise
+
+    def tryRun( self ):
+        super( ExceptionalThread, self ).run( )
 
     def join( self, *args, **kwargs ):
         super( ExceptionalThread, self ).join( *args, **kwargs )
