@@ -12,7 +12,7 @@ from bd2k.util.ec2.credentials import (enable_metadata_credential_caching,
 def get_access_key( ):
     from boto.provider import Provider
     provider = Provider( 'aws' )
-    return provider.get_access_key( )
+    return None if provider._credential_expiry_time is None else provider.get_access_key( ) 
 
 
 class CredentialsTest( unittest.TestCase ):
@@ -74,7 +74,7 @@ class CredentialsTest( unittest.TestCase ):
             disable_metadata_credential_caching( )
             # Again for idempotence
             disable_metadata_credential_caching( )
-        self.assertTrue( os.path.exists( self.cache_path ) )
+        self.assertEquals( access_key is not None, os.path.exists( self.cache_path ) )
         self.assertEquals( len( futures ), num_tests )
         access_keys = [ f.get( ) for f in futures ]
         self.assertEquals( len( access_keys ), num_tests )
