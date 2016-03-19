@@ -78,8 +78,10 @@ def _populate_keys_from_metadata_server( self ):
         log.debug( 'Attempting to read cached credentials from %s.', path )
         try:
             with open( path, 'r' ) as f:
-                record = f.read( ).split( '\n' )
-                if record:
+                content = f.read( )
+                if content:
+                    record = content.split( '\n' )
+                    assert len(record) == 4
                     self._access_key = record[ 0 ]
                     self._secret_key = record[ 1 ]
                     self._security_token = record[ 2 ]
