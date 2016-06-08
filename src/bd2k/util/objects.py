@@ -210,6 +210,7 @@ class InnerClass( object ):
                 return "%s bound to %s" % (super( BoundInner, self ).__repr__( ), repr( _outer ))
 
         BoundInner.__name__ = self.inner_class.__name__
+        BoundInner.__module__ = self.inner_class.__module__
         return BoundInner
 
     def __call__( *args, **kwargs ):
