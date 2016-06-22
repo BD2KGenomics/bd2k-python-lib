@@ -21,6 +21,12 @@ class TestPanic( unittest.TestCase ):
         except:
             self.__assert_raised_exception_is_primary( )
 
+    def test_panic_with_secondary( self ):
+        try:
+            self.try_and_panic_with_secondary( )
+        except:
+            self.__assert_raised_exception_is_primary( )
+
     def try_and_panic_by_hand( self ):
         try:
             self.line_of_primary_exc = inspect.currentframe( ).f_lineno + 1
@@ -34,6 +40,14 @@ class TestPanic( unittest.TestCase ):
             raise exc_type, exc_value, exc_traceback
 
     def try_and_panic( self ):
+        try:
+            self.line_of_primary_exc = inspect.currentframe( ).f_lineno + 1
+            raise ValueError( "primary" )
+        except:
+            with panic( log ):
+                pass
+
+    def try_and_panic_with_secondary( self ):
         try:
             self.line_of_primary_exc = inspect.currentframe( ).f_lineno + 1
             raise ValueError( "primary" )
