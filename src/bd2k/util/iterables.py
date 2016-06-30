@@ -45,6 +45,7 @@ def flatten( iterables ):
     return chain.from_iterable( iterables )
 
 
+# noinspection PyPep8Naming
 class concat( object ):
     """
     A literal iterable that lets you combine sequence literals (lists, set) with generators or list
@@ -66,6 +67,9 @@ class concat( object ):
     >>> list( concat( 1, xrange( 2, 4 ), 4 ) )
     [1, 2, 3, 4]
 
+    It only does so one level deep. If you need to recursively flatten a data structure,
+    check out crush().
+
     If you want to prevent that flattening for an iterable argument, wrap it in concat():
 
     >>> list( concat( 1, concat( xrange( 2, 4 ) ), 4 ) )
@@ -75,13 +79,13 @@ class concat( object ):
 
     >>> list( concat() ) # empty concat
     []
-    >>> list( concat( 1 ) ) # non-iterable singleton
+    >>> list( concat( 1 ) ) # non-iterable
     [1]
-    >>> list( concat( concat() ) ) # empty, iterable singleton
+    >>> list( concat( concat() ) ) # empty iterable
     []
-    >>> list( concat( concat( 1 ) ) ) # singleton singleton
+    >>> list( concat( concat( 1 ) ) ) # singleton iterable
     [1]
-    >>> list( concat( 1, concat( 2 ), 3 ) )
+    >>> list( concat( 1, concat( 2 ), 3 ) ) # flattened iterable
     [1, 2, 3]
     >>> list( concat( 1, [2], 3 ) ) # flattened iterable
     [1, 2, 3]
@@ -118,3 +122,48 @@ class concat( object ):
             return i
 
         return flatten( imap( expand, self.args ) )
+
+
+# noinspection PyPep8Naming
+class crush( object ):
+    """
+    >>> list(crush([]))
+    []
+    >>> list(crush([[]]))
+    []
+    >>> list(crush([1]))
+    [1]
+    >>> list(crush([[1]]))
+    [1]
+    >>> list(crush([[[]]]))
+    []
+    >>> list(crush([1,(),['two'],([3, 4],),{5}]))
+    [1, 'two', 3, 4, 5]
+
+    >>> list(crush(1))
+    Traceback (most recent call last):
+    ...
+    TypeError: 'int' object is not iterable
+
+    >>> list(crush('123'))
+    ['1', '2', '3']
+
+    The above is a bit of an anomaly since strings occurring inside iterables are not broken up:
+
+    >>> list(crush(['123']))
+    ['123']
+    """
+
+    def __init__( self, iterables ):
+        super( crush, self ).__init__( )
+        self.iterables = iterables
+
+    def __iter__( self ):
+        def expand( x ):
+            try:
+                # Using __iter__() instead of iter() prevents breaking up of strings
+                return crush( x.__iter__( ) )
+            except AttributeError:
+                return x,
+
+        return flatten( imap( expand, self.iterables ) )
