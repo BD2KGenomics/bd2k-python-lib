@@ -6,7 +6,8 @@ import sys
 from bd2k.util.exceptions import panic
 
 log = logging.getLogger( __name__ )
-logging.basicConfig()
+logging.basicConfig( )
+
 
 class TestPanic( unittest.TestCase ):
     def test_panic_by_hand( self ):
@@ -24,6 +25,12 @@ class TestPanic( unittest.TestCase ):
     def test_panic_with_secondary( self ):
         try:
             self.try_and_panic_with_secondary( )
+        except:
+            self.__assert_raised_exception_is_primary( )
+
+    def test_nested_panic( self ):
+        try:
+            self.try_and_nested_panic_with_secondary( )
         except:
             self.__assert_raised_exception_is_primary( )
 
@@ -55,6 +62,15 @@ class TestPanic( unittest.TestCase ):
             with panic( log ):
                 raise RuntimeError( "secondary" )
 
+    def try_and_nested_panic_with_secondary( self ):
+        try:
+            self.line_of_primary_exc = inspect.currentframe( ).f_lineno + 1
+            raise ValueError( "primary" )
+        except:
+            with panic( log ):
+                with panic( log ):
+                    raise RuntimeError( "secondary" )
+
     def __assert_raised_exception_is_primary( self ):
         exc_type, exc_value, exc_traceback = sys.exc_info( )
         self.assertEquals( exc_type, ValueError )
@@ -62,5 +78,3 @@ class TestPanic( unittest.TestCase ):
         while exc_traceback.tb_next is not None:
             exc_traceback = exc_traceback.tb_next
         self.assertEquals( exc_traceback.tb_lineno, self.line_of_primary_exc )
-
-
