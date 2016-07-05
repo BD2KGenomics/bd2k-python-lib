@@ -46,7 +46,7 @@ class RequirementError( Exception ):
     pass
 
 
-def require( value, message ):
+def require( value, message, *message_args ):
     """
     Raise RequirementError with the given message if the given value is considered false. See
     https://docs.python.org/2/library/stdtypes.html#truth-value-testing for a defintiion of which
@@ -55,13 +55,27 @@ def require( value, message ):
 
     :param Any value: the value to be tested
     :param message:
+    :param message_args: optional values for % formatting the given message
     :return:
 
     >>> require(1 + 1 == 2, 'You made a terrible mistake')
+
     >>> require(1 + 1 == 3, 'You made a terrible mistake')
     Traceback (most recent call last):
     ...
     RequirementError: You made a terrible mistake
+
+    >>> require(1 + 1 == 3, 'You made a terrible mistake, %s', 'you fool')
+    Traceback (most recent call last):
+    ...
+    RequirementError: You made a terrible mistake, you fool
+
+    >>> require(1 + 1 == 3, 'You made a terrible mistake, %s %s', 'your', 'majesty')
+    Traceback (most recent call last):
+    ...
+    RequirementError: You made a terrible mistake, your majesty
     """
     if not value:
-        raise RequirementError( message )
+        if message_args:
+            message = message % message_args
+        raise RequirementError( message)
