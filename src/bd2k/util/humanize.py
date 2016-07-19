@@ -58,7 +58,8 @@ def bytes2human(n, fmt='%(value).1f %(symbol)s', symbols='customary'):
       >>> bytes2human(10000, fmt="%(value).5f %(symbol)s")
       '9.76562 K'
     """
-    n = int(n)
+    # Convert to int via float so scientific notations can be parsed
+    n = int(float(n))
     if n < 0:
         raise ValueError("n < 0")
     symbols = SYMBOLS[symbols]
@@ -108,12 +109,13 @@ def human2bytes(s):
       ValueError: can't interpret '12 foo'
     """
     init = s
-    num = ""
-    while s and s[0:1].isdigit() or s[0:1] == '.':
-        num += s[0]
-        s = s[1:]
-    num = float(num)
-    letter = s.strip()
+    letter = ""
+    while s and s[-1].isalpha():
+        letter += s[-1]
+        s = s[:-1]
+    num = float(s.strip())
+    # Letter is currently the reverse of what we need.
+    letter = letter[::-1]
     for name, sset in SYMBOLS.items():
         if letter in sset:
             break
