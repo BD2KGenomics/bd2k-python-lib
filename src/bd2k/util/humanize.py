@@ -52,6 +52,8 @@ def bytes2human(n, fmt='%(value).1f %(symbol)s', symbols='customary'):
       >>> bytes2human(10000, "%(value).1f %(symbol)s/sec")
       '9.8 K/sec'
 
+      >>> bytes2human('1.073742e+09')
+      '1.0 G'
       >>> # precision can be adjusted by playing with %f operator
       >>> bytes2human(10000, fmt="%(value).5f %(symbol)s")
       '9.76562 K'
@@ -98,6 +100,8 @@ def human2bytes(s):
       1
       >>> human2bytes('1 k')  # k is an alias for K
       1024
+      >>> human2bytes('1.073742e+09')
+      1073742000
       >>> human2bytes('12 foo')
       Traceback (most recent call last):
           ...
