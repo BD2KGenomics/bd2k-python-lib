@@ -151,10 +151,20 @@ def rfc3339_datetime_re( anchor=True ):
 
     >>> bool( rfc3339_datetime_re().match('9999-99-99T99:99:99.9-99:99') )
     True
+
+    If the regular expression matches, each component of the matching value will be exposed as a
+    captured group in the match object.
+
+    >>> rfc3339_datetime_re().match('2013-11-06T15:56:39Z').groups()
+    ('2013', '11', '06', '15', '56', '39', None, 'Z')
+    >>> rfc3339_datetime_re().match('2013-11-06T15:56:39.123Z').groups()
+    ('2013', '11', '06', '15', '56', '39', '123', 'Z')
+    >>> rfc3339_datetime_re().match('2013-11-06T15:56:39.123-08:30').groups()
+    ('2013', '11', '06', '15', '56', '39', '123', '-08:30')
     """
     return re.compile(
         ('^' if anchor else '') +
-        '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})' +
+        '(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(Z|[+-]\d{2}:\d{2})' +
         ('$' if anchor else '') )
 
 
