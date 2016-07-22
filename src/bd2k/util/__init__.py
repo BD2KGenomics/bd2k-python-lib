@@ -1,9 +1,13 @@
 from __future__ import absolute_import
-from functools import wraps
-import pwd
+
+import datetime
 import grp
-import re
+import pwd
+from functools import wraps
+
 from threading import Lock
+
+import re
 
 
 def uid_to_name( uid ):
@@ -166,6 +170,37 @@ def rfc3339_datetime_re( anchor=True ):
         ('^' if anchor else '') +
         '(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(Z|[+-]\d{2}:\d{2})' +
         ('$' if anchor else '') )
+
+
+_rfc3339_datetime_re = rfc3339_datetime_re( )
+
+
+def parse_iso_utc( s ):
+    """
+    Parses an ISO time with a hard-coded Z for zulu-time (UTC) at the end. Other timezones are
+    not supported.
+
+    :param str s: the ISO-formatted time
+
+    :rtype: datetime.datetime
+
+    :return: an timezone-naive datetime object
+
+    >>> parse_iso_utc('2016-04-27T00:28:04.000Z')
+    datetime.datetime(2016, 4, 27, 0, 28, 4)
+    >>> parse_iso_utc('2016-04-27T00:28:04Z')
+    datetime.datetime(2016, 4, 27, 0, 28, 4)
+    >>> parse_iso_utc('2016-04-27T00:28:04X')
+    Traceback (most recent call last):
+    ...
+    ValueError: Not a valid ISO datetime in UTC: 2016-04-27T00:28:04X
+    """
+    m = _rfc3339_datetime_re.match( s )
+    if not m:
+        raise ValueError( 'Not a valid ISO datetime in UTC: ' + s )
+    else:
+        fmt = '%Y-%m-%dT%H:%M:%S' + ('.%f' if m.group( 7 ) else '') + 'Z'
+        return datetime.datetime.strptime( s, fmt )
 
 
 def strict_bool( s ):
