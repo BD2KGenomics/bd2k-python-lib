@@ -26,9 +26,5 @@ import os
 
 class TestD64( TestCase ):
     def test( self ):
-        data = [ (os.urandom( i ), i) for i in xrange( 1000 ) ]
-        encoded_data = [ (d64.encode( d ), i) for d, i in data ]
-        decoded_data = [ (d64.decode( s ), i) for s, i in encoded_data ]
-        self.assertEqual( data, decoded_data )
-        # Ensure that lexicographical sort is consistent between data and encoded data
-        self.assertEqual( zip( *sorted( data ) )[ 1 ], zip( *sorted( encoded_data ) )[ 1 ] )
+        l = [ os.urandom( i ) for i in xrange( 1000 ) ]
+        self.assertEqual( map( d64.decode, sorted( map( d64.encode, l ) ) ), sorted( l ) )
