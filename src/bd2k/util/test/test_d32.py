@@ -16,15 +16,15 @@
 # DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# Ported from JS found at https://github.com/dominictarr/d64
+# Inspired by JavaScript code found at https://github.com/dominictarr/d64
 
 from __future__ import absolute_import
 from unittest import TestCase
-from bd2k.util.d64 import standard as d64
+from bd2k.util.d32 import standard as d32
 import os
 
 
-class TestD64( TestCase ):
+class TestD32( TestCase ):
     def test( self ):
         l = [ os.urandom( i ) for i in xrange( 1000 ) ]
-        self.assertEqual( map( d64.decode, sorted( map( d64.encode, l ) ) ), sorted( l ) )
+        self.assertEqual( map( d32.decode, sorted( map( d32.encode, l ) ) ), sorted( l ) )

@@ -23,12 +23,12 @@
 class D64( object ):
     def __init__( self, special_chars ):
         super( D64, self ).__init__( )
-        self.chars = bytearray( sorted(
-            'PYFGCRLAOEUIDHTNSQJKXBMWVZpyfgcrlaoeuidhtnsqjkxbmwvz1234567890' + special_chars ) )
-        self.codeToIndex = bytearray( 128 )
+        alphabet = 'PYFGCRLAOEUIDHTNSQJKXBMWVZpyfgcrlaoeuidhtnsqjkxbmwvz1234567890'
+        self.alphabet = bytearray( sorted( alphabet + special_chars ) )
+        self.lookup = bytearray( 255 )
         for i in xrange( 64 ):
-            code = self.chars[ i ]
-            self.codeToIndex[ code ] = i
+            code = self.alphabet[ i ]
+            self.lookup[ code ] = i
 
     def encode( self, data ):
         """
@@ -48,32 +48,32 @@ class D64( object ):
         s = bytearray( (l * 4 + 2) / 3 )
         hang = 0
         j = 0
-        chars = self.chars
+        a = self.alphabet
         for i in xrange( l ):
             v = ord( data[ i ] )
             r = i % 3
             if r == 0:
-                s[ j ] = chars[ v >> 2 ]
+                s[ j ] = a[ v >> 2 ]
                 j += 1
                 hang = (v & 3) << 4
             elif r == 1:
-                s[ j ] = chars[ hang | v >> 4 ]
+                s[ j ] = a[ hang | v >> 4 ]
                 j += 1
                 hang = (v & 0xf) << 2
             elif r == 2:
-                s[ j ] = chars[ hang | v >> 6 ]
+                s[ j ] = a[ hang | v >> 6 ]
                 j += 1
-                s[ j ] = chars[ v & 0x3f ]
+                s[ j ] = a[ v & 0x3f ]
                 j += 1
                 hang = 0
             else:
                 assert False
         if l % 3:
-            s[ j ] = chars[ hang ]
+            s[ j ] = a[ hang ]
 
         return str( s )
 
-    def decode( self, s ):
+    def decode( self, e ):
         """
         >>> decode = standard.decode
         >>> decode('')
@@ -87,14 +87,14 @@ class D64( object ):
         >>> decode('..31.kF40VR')
         '\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07'
         """
-        l = len( s )
+        n = len( e )
         j = 0
-        b = bytearray( l * 3 / 4 )
+        b = bytearray( n * 3 / 4 )
         hang = 0
-        codeToIndex = self.codeToIndex
+        l = self.lookup
 
-        for i in xrange( l ):
-            v = codeToIndex[ ord( s[ i ] ) ]
+        for i in xrange( n ):
+            v = l[ ord( e[ i ] ) ]
             r = i % 4
             if r == 0:
                 hang = v << 2
