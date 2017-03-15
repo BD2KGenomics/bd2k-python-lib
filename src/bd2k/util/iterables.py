@@ -1,4 +1,6 @@
-from itertools import takewhile, izip, izip_longest, dropwhile, imap, chain
+
+from six.moves import map as imap, zip as izip, zip_longest as izip_longest
+from itertools import takewhile, dropwhile, chain
 
 
 def common_prefix( xs, ys ):
