@@ -2,6 +2,7 @@ import inspect
 import logging
 import unittest
 import sys
+from six import reraise
 
 from bd2k.util.exceptions import panic
 
@@ -44,7 +45,7 @@ class TestPanic( unittest.TestCase ):
                 raise RuntimeError( "secondary" )
             except Exception:
                 pass
-            raise exc_type, exc_value, exc_traceback
+            reraise(exc_type, exc_value, exc_traceback)
 
     def try_and_panic( self ):
         try:

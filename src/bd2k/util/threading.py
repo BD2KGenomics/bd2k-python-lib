@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 import sys
 import threading
+from six import reraise
 
 
 class BoundedEmptySemaphore( threading._BoundedSemaphore ):
@@ -61,7 +62,7 @@ class ExceptionalThread( threading.Thread ):
         if not self.is_alive( ) and self.exc_info is not None:
             type, value, traceback = self.exc_info
             self.exc_info = None
-            raise type, value, traceback
+            reraise(type, value, traceback)
 
 
 # noinspection PyPep8Naming

@@ -15,9 +15,9 @@ kwargs = dict(
 
     package_dir={ '': 'src' },
     packages=find_packages( 'src' ),
-    install_requires=[ ],
+    install_requires=['six'],
     tests_require=[
-        'pytest==2.7.2',
+        'pytest>=2.7.2',
         'mock==1.0.1',
         'lockfile==0.11.0',
         'boto==2.38.0' ],

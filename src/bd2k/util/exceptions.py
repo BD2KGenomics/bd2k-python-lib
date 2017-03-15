@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 import sys
+from six import reraise
 
 
 class panic( object ):
@@ -34,7 +35,7 @@ class panic( object ):
         if self.log is not None and exc_info and exc_info[ 0 ]:
             self.log.warn( "Exception during panic", exc_info=exc_info )
         exc_type, exc_value, traceback = self.exc_info
-        raise exc_type, exc_value, traceback
+        reraise(exc_type, exc_value, traceback)
 
 
 class RequirementError( Exception ):
