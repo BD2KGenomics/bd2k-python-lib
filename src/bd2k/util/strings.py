@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import inspect
+from six import xrange
 
 
 def to_english( iterable, separator=", ", conjunction=' and ', empty='empty',
