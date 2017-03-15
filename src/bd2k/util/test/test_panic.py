@@ -74,7 +74,10 @@ class TestPanic( unittest.TestCase ):
     def __assert_raised_exception_is_primary( self ):
         exc_type, exc_value, exc_traceback = sys.exc_info( )
         self.assertEquals( exc_type, ValueError )
-        self.assertEquals( exc_value.message, "primary" )
+        if sys.version_info < (3, ):
+            self.assertEquals( exc_value.message, "primary" )
+        else :
+            self.assertEquals( exc_value.args[0], "primary" )
         while exc_traceback.tb_next is not None:
             exc_traceback = exc_traceback.tb_next
         self.assertEquals( exc_traceback.tb_lineno, self.line_of_primary_exc )
