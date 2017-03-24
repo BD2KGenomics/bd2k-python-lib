@@ -1,10 +1,15 @@
 from __future__ import absolute_import
 import sys
-import threading
 from six import reraise
+import threading
+
+if sys.version_info < (3, ):
+    from threading import _BoundedSemaphore as BoundedSemaphore
+else:
+    from threading import BoundedSemaphore
 
 
-class BoundedEmptySemaphore( threading._BoundedSemaphore ):
+class BoundedEmptySemaphore( BoundedSemaphore ):
     """
     A bounded semaphore that is initially empty.
     """
