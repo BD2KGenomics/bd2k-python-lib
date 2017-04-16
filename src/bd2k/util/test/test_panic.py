@@ -2,6 +2,7 @@ import inspect
 import logging
 import unittest
 import sys
+from six import reraise
 
 from bd2k.util.exceptions import panic
 
@@ -44,7 +45,7 @@ class TestPanic( unittest.TestCase ):
                 raise RuntimeError( "secondary" )
             except Exception:
                 pass
-            raise exc_type, exc_value, exc_traceback
+            reraise(exc_type, exc_value, exc_traceback)
 
     def try_and_panic( self ):
         try:
@@ -74,7 +75,10 @@ class TestPanic( unittest.TestCase ):
     def __assert_raised_exception_is_primary( self ):
         exc_type, exc_value, exc_traceback = sys.exc_info( )
         self.assertEquals( exc_type, ValueError )
-        self.assertEquals( exc_value.message, "primary" )
+        if sys.version_info < (3, ):
+            self.assertEquals( exc_value.message, "primary" )
+        else :
+            self.assertEquals( exc_value.args[0], "primary" )
         while exc_traceback.tb_next is not None:
             exc_traceback = exc_traceback.tb_next
         self.assertEquals( exc_traceback.tb_lineno, self.line_of_primary_exc )

@@ -123,7 +123,8 @@ def _hash_hashable( hash_obj, items ):
     hash_obj.update( '}' )
 
 
-def _hash_hashable_item( hash_obj, (k, v) ):
+def _hash_hashable_item( hash_obj, kv ):
+    k, v = kv
     if isinstance( k, basestring ):
         hash_obj.update( k )
         hash_obj.update( ':' )

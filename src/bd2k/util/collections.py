@@ -155,7 +155,7 @@ def rindex( l, v ):
     2
     """
     try:
-        n = next( dropwhile( lambda (i, x): v != x, enumerate( reversed( l ), 1 ) ) )[ 0 ]
+        n = next( dropwhile( lambda ix: v != ix[1], enumerate( reversed( l ), 1 ) ) )[ 0 ]
     except StopIteration:
         raise ValueError( v )
     else:

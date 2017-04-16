@@ -1,4 +1,6 @@
-from itertools import takewhile, izip, izip_longest, dropwhile, imap, chain
+
+from six.moves import map as imap, zip as izip, zip_longest as izip_longest
+from itertools import takewhile, dropwhile, chain
 
 
 def common_prefix( xs, ys ):
@@ -18,7 +20,7 @@ def common_prefix( xs, ys ):
     >>> list( common_prefix('A','B') )
     []
     """
-    return imap( lambda (x, y): x, takewhile( lambda (a, b): a == b, izip( xs, ys ) ) )
+    return imap( lambda xy: x[0], takewhile( lambda ab: ab[0] == ab[1], izip( xs, ys ) ) )
 
 
 def disparate_suffix( xs, ys ):
@@ -38,7 +40,7 @@ def disparate_suffix( xs, ys ):
     >>> list( disparate_suffix('A','B') )
     [('A', 'B')]
     """
-    return dropwhile( lambda (a, b): a == b, izip_longest( xs, ys ) )
+    return dropwhile( lambda ab: ab[0] == ab[1], izip_longest( xs, ys ) )
 
 
 def flatten( iterables ):

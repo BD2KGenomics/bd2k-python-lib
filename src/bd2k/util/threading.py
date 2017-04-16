@@ -1,9 +1,15 @@
 from __future__ import absolute_import
 import sys
+from six import reraise
 import threading
 
+if sys.version_info < (3, ):
+    from threading import _BoundedSemaphore as BoundedSemaphore
+else:
+    from threading import BoundedSemaphore
 
-class BoundedEmptySemaphore( threading._BoundedSemaphore ):
+
+class BoundedEmptySemaphore( BoundedSemaphore ):
     """
     A bounded semaphore that is initially empty.
     """
@@ -61,7 +67,7 @@ class ExceptionalThread( threading.Thread ):
         if not self.is_alive( ) and self.exc_info is not None:
             type, value, traceback = self.exc_info
             self.exc_info = None
-            raise type, value, traceback
+            reraise(type, value, traceback)
 
 
 # noinspection PyPep8Naming

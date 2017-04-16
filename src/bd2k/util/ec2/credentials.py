@@ -109,7 +109,7 @@ def _populate_keys_from_metadata_server( self ):
         log.debug( 'Racing to create %s.', tmp_path )
         # Only one process, the winner, will succeed
         try:
-            fd = os.open( tmp_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0600 )
+            fd = os.open( tmp_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600 )
         except OSError as e:
             if e.errno == errno.EEXIST:
                 log.debug( 'Lost the race to create %s. Waiting on winner to remove it.', tmp_path )
