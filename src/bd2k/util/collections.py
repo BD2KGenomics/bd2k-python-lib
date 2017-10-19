@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from builtins import next
 import collections
 from itertools import dropwhile
 
@@ -155,7 +156,7 @@ def rindex( l, v ):
     2
     """
     try:
-        n = next( dropwhile( lambda (i, x): v != x, enumerate( reversed( l ), 1 ) ) )[ 0 ]
+        n = next( dropwhile( lambda i_x: v != i_x[1], enumerate( reversed( l ), 1 ) ) )[ 0 ]
     except StopIteration:
         raise ValueError( v )
     else:

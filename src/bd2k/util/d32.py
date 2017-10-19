@@ -1,3 +1,4 @@
+from __future__ import division
 # Copyright (c) 2015 Hannes Schmidt
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -17,6 +18,10 @@
 
 # Inspired by Dominic Tarr's JavaScript at https://github.com/dominictarr/d64
 
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
 class D32( object ):
     """
     Base32 encoding and decoding without padding, and using an arbitrary alphabet.
@@ -26,7 +31,7 @@ class D32( object ):
         super( D32, self ).__init__( )
         self.alphabet = bytearray( alphabet )
         self.lookup = bytearray( 255 )
-        for i in xrange( 32 ):
+        for i in range( 32 ):
             self.lookup[ self.alphabet[ i ] ] = i
 
     def encode( self, d ):
@@ -44,7 +49,7 @@ class D32( object ):
         '222k62s62o'
         """
         m = len( d )
-        n = (m * 8 + 4) / 5
+        n = old_div((m * 8 + 4), 5)
         padding = 8 - n % 8
         e = bytearray( n + padding )
         i, j = 0, 0
@@ -83,7 +88,7 @@ class D32( object ):
         '\\xff'
         """
         n = len( e )
-        m = n * 5 / 8
+        m = old_div(n * 5, 8)
         padding = 5 - m % 5
         d = bytearray( m + padding )
         i, j = 0, 0
@@ -104,7 +109,7 @@ class D32( object ):
             d[ i + 4 ] = g[ 6 ] << 5 & 255 | g[ 7 ]
             j += 8
             i += 5
-        return str( d[ :-padding ] )
+        return bytes( d[ :-padding ] )
 
 
 # A variant of Base64 that maintains the lexicographical ordering such that for any given list of

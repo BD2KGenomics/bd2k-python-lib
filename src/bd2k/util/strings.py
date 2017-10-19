@@ -1,5 +1,8 @@
 # coding=utf-8
 
+from builtins import str
+from builtins import next
+from builtins import range
 import inspect
 
 
@@ -40,7 +43,7 @@ def to_english( iterable, separator=", ", conjunction=' and ', empty='empty',
     """
     i = iter( iterable )
     try:
-        x = i.next( )
+        x = next(i)
     except StopIteration:
         return empty
     r = [ ]
@@ -49,7 +52,7 @@ def to_english( iterable, separator=", ", conjunction=' and ', empty='empty',
         if wrapper is not None:
             x = wrapper + x + wrapper
         try:
-            n = i.next( )
+            n = next(i)
         except StopIteration:
             if len(r) > 2:
                 r.append( conjunction )
@@ -61,7 +64,7 @@ def to_english( iterable, separator=", ", conjunction=' and ', empty='empty',
             if r: r.append( separator )
             r.append( x )
             x = n
-    return ''.join( r )
+    return str(''.join( r ))
 
 
 def interpolate( template, skip_frames=0, **kwargs ):
@@ -116,7 +119,7 @@ def interpolate_dict( template, dictionary, skip_frames=0 ):
 
 def __interpolate( template, skip_frames, dictionary ):
     frame = inspect.currentframe( )
-    for i in xrange( skip_frames + 2 ):
+    for i in range( skip_frames + 2 ):
         prev_frame = frame
         frame = frame.f_back
         del prev_frame

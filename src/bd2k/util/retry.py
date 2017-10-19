@@ -1,7 +1,10 @@
 from __future__ import absolute_import
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import next
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from contextlib import contextmanager
 
 import logging
@@ -119,7 +122,7 @@ default_timeout = 300
 
 
 def retryable_http_error( e ):
-    return isinstance( e, urllib2.HTTPError ) and e.code in ('503', '408', '500')
+    return isinstance( e, urllib.error.HTTPError ) and e.code in ('503', '408', '500')
 
 
 def retry_http( delays=default_delays, timeout=default_timeout, predicate=retryable_http_error ):
@@ -128,7 +131,7 @@ def retry_http( delays=default_delays, timeout=default_timeout, predicate=retrya
     >>> for attempt in retry_http(timeout=5):
     ...     with attempt:
     ...         i += 1
-    ...         raise urllib2.HTTPError('http://www.test.com', '408', 'some message', {}, None)
+    ...         raise urllib.error.HTTPError('http://www.test.com', '408', 'some message', {}, None)
     Traceback (most recent call last):
     ...
     HTTPError: HTTP Error 408: some message

@@ -15,12 +15,12 @@ kwargs = dict(
 
     package_dir={ '': 'src' },
     packages=find_packages( 'src' ),
-    install_requires=[ ],
+    install_requires=[ 'future' ],
     tests_require=[
         'pytest==2.7.2',
         'mock==1.0.1',
         'lockfile==0.11.0',
-        'boto==2.38.0' ],
+        'boto==2.38.0'],
     namespace_packages=[ 'bd2k' ] )
 
 from setuptools.command.test import test as TestCommand

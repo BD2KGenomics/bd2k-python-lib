@@ -40,6 +40,8 @@
 
 from __future__ import absolute_import
 
+from past.builtins import basestring
+from builtins import object
 """
 The ``E`` Element factory for generating XML documents.
 """
@@ -66,9 +68,9 @@ except NameError:
     basestring = str
 
 try:
-    unicode
+    str
 except NameError:
-    unicode = str
+    str = str
 
 
 class ElementMaker(object):
@@ -181,14 +183,14 @@ class ElementMaker(object):
 
         if str not in typemap:
             typemap[str] = add_text
-        if unicode not in typemap:
-            typemap[unicode] = add_text
+        if str not in typemap:
+            typemap[str] = add_text
         # if ET.CDATA not in typemap:
         #     typemap[ET.CDATA] = add_cdata
 
         def add_dict(elem, item):
             attrib = elem.attrib
-            for k, v in item.items():
+            for k, v in list(item.items()):
                 if isinstance(v, basestring):
                     attrib[k] = v
                 else:

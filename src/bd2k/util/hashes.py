@@ -1,3 +1,6 @@
+from builtins import str
+from builtins import next
+from past.builtins import basestring
 def hash_json( hash_obj, value ):
     """
     Compute the hash of a parsed JSON value using the given hash object. This function does not
@@ -58,7 +61,7 @@ def hash_json( hash_obj, value ):
     ValueError: Type <type 'object'> is not supported
     """
     try:
-        items = value.iteritems( )
+        items = iter(value.items( ))
     except AttributeError:
         # Must check for string before testing iterability since strings are iterable
         if isinstance( value, basestring ):
@@ -123,7 +126,8 @@ def _hash_hashable( hash_obj, items ):
     hash_obj.update( '}' )
 
 
-def _hash_hashable_item( hash_obj, (k, v) ):
+def _hash_hashable_item( hash_obj, xxx_todo_changeme ):
+    (k, v) = xxx_todo_changeme
     if isinstance( k, basestring ):
         hash_obj.update( k )
         hash_obj.update( ':' )

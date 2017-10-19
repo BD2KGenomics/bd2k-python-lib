@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from builtins import range
 import sys
 import threading
 
@@ -10,7 +11,7 @@ class BoundedEmptySemaphore( threading._BoundedSemaphore ):
 
     def __init__( self, value=1, verbose=None ):
         super( BoundedEmptySemaphore, self ).__init__( value, verbose )
-        for i in xrange( value ):
+        for i in range( value ):
             assert self.acquire( blocking=False )
 
 

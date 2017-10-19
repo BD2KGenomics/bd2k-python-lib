@@ -15,7 +15,7 @@ class Utf8SyslogFormatter( logging.Formatter ):
 
         def getMessage( _self ):
             msg = origGetMessage( )
-            if isinstance( msg, unicode ):
+            if isinstance( msg, str ):
                 try:
                     # First check if we can represent the message as ASCII without loosing
                     # information. That we we can avoid writing the BOM unless absolutely necessary.

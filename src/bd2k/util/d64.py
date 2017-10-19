@@ -1,3 +1,4 @@
+from __future__ import division
 # Copyright (c) 2014 Dominic Tarr
 # Copyright (c) 2015 Hannes Schmidt
 #
@@ -20,13 +21,17 @@
 
 
 
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
 class D64( object ):
     def __init__( self, special_chars ):
         super( D64, self ).__init__( )
         alphabet = 'PYFGCRLAOEUIDHTNSQJKXBMWVZpyfgcrlaoeuidhtnsqjkxbmwvz1234567890'
         self.alphabet = bytearray( sorted( alphabet + special_chars ) )
         self.lookup = bytearray( 255 )
-        for i in xrange( 64 ):
+        for i in range( 64 ):
             code = self.alphabet[ i ]
             self.lookup[ code ] = i
 
@@ -45,11 +50,11 @@ class D64( object ):
         '..31.kF40VR'
         """
         l = len( data )
-        s = bytearray( (l * 4 + 2) / 3 )
+        s = bytearray( old_div((l * 4 + 2), 3) )
         hang = 0
         j = 0
         a = self.alphabet
-        for i in xrange( l ):
+        for i in range( l ):
             v = ord( data[ i ] )
             r = i % 3
             if r == 0:
@@ -89,11 +94,11 @@ class D64( object ):
         """
         n = len( e )
         j = 0
-        b = bytearray( n * 3 / 4 )
+        b = bytearray( old_div(n * 3, 4) )
         hang = 0
         l = self.lookup
 
-        for i in xrange( n ):
+        for i in range( n ):
             v = l[ ord( e[ i ] ) ]
             r = i % 4
             if r == 0:
@@ -111,7 +116,7 @@ class D64( object ):
                 j += 1
             else:
                 assert False
-        return str( b )
+        return bytes( b )
 
 
 standard = D64( '._' )
