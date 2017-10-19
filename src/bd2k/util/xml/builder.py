@@ -68,9 +68,9 @@ except NameError:
     basestring = str
 
 try:
-    str
+    unicode
 except NameError:
-    str = str
+    unicode = str
 
 
 class ElementMaker(object):
@@ -183,8 +183,8 @@ class ElementMaker(object):
 
         if str not in typemap:
             typemap[str] = add_text
-        if str not in typemap:
-            typemap[str] = add_text
+        if unicode not in typemap:
+            typemap[unicode] = add_text
         # if ET.CDATA not in typemap:
         #     typemap[ET.CDATA] = add_cdata
 

@@ -126,8 +126,8 @@ def _hash_hashable( hash_obj, items ):
     hash_obj.update( '}' )
 
 
-def _hash_hashable_item( hash_obj, xxx_todo_changeme ):
-    (k, v) = xxx_todo_changeme
+def _hash_hashable_item( hash_obj, k_v ):
+    (k, v) = k_v
     if isinstance( k, basestring ):
         hash_obj.update( k )
         hash_obj.update( ':' )
