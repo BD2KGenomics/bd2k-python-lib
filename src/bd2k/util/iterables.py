@@ -1,4 +1,11 @@
-from itertools import takewhile, izip, izip_longest, dropwhile, imap, chain
+from builtins import map
+from builtins import zip
+from builtins import object
+from itertools import takewhile, dropwhile, chain
+try:
+    from itertools import zip_longest as zip_longest
+except:
+    from itertools import izip_longest as zip_longest
 
 
 def common_prefix( xs, ys ):
@@ -18,7 +25,7 @@ def common_prefix( xs, ys ):
     >>> list( common_prefix('A','B') )
     []
     """
-    return imap( lambda (x, y): x, takewhile( lambda (a, b): a == b, izip( xs, ys ) ) )
+    return map( lambda x_y: x_y[0], takewhile( lambda a_b: a_b[0] == a_b[1], zip( xs, ys ) ) )
 
 
 def disparate_suffix( xs, ys ):
@@ -38,7 +45,7 @@ def disparate_suffix( xs, ys ):
     >>> list( disparate_suffix('A','B') )
     [('A', 'B')]
     """
-    return dropwhile( lambda (a, b): a == b, izip_longest( xs, ys ) )
+    return dropwhile( lambda a_b1: a_b1[0] == a_b1[1], zip_longest( xs, ys ) )
 
 
 def flatten( iterables ):
@@ -121,7 +128,7 @@ class concat( object ):
                     i = x,
             return i
 
-        return flatten( imap( expand, self.args ) )
+        return flatten( map( expand, self.args ) )
 
 
 # noinspection PyPep8Naming
@@ -166,4 +173,4 @@ class crush( object ):
             except AttributeError:
                 return x,
 
-        return flatten( imap( expand, self.iterables ) )
+        return flatten( map( expand, self.iterables ) )

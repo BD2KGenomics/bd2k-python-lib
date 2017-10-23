@@ -40,6 +40,8 @@
 
 from __future__ import absolute_import
 
+from past.builtins import basestring
+from builtins import object
 """
 The ``E`` Element factory for generating XML documents.
 """
@@ -188,7 +190,7 @@ class ElementMaker(object):
 
         def add_dict(elem, item):
             attrib = elem.attrib
-            for k, v in item.items():
+            for k, v in list(item.items()):
                 if isinstance(v, basestring):
                     attrib[k] = v
                 else:

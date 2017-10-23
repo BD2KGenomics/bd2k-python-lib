@@ -1,3 +1,4 @@
+from builtins import range
 from unittest import TestCase
 
 from mock import MagicMock, call

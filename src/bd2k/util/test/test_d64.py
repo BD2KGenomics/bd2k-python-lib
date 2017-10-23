@@ -19,6 +19,8 @@
 # Ported from JS found at https://github.com/dominictarr/d64
 
 from __future__ import absolute_import
+from builtins import map
+from builtins import range
 from unittest import TestCase
 from bd2k.util.d64 import standard as d64
 import os
@@ -26,5 +28,5 @@ import os
 
 class TestD64( TestCase ):
     def test( self ):
-        l = [ os.urandom( i ) for i in xrange( 1000 ) ]
-        self.assertEqual( map( d64.decode, sorted( map( d64.encode, l ) ) ), sorted( l ) )
+        l = [ os.urandom( i ) for i in range( 1000 ) ]
+        self.assertEqual( list(map( d64.decode, sorted( map( d64.encode, l ) ) )), sorted( l ) )

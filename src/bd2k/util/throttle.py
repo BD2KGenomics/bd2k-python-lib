@@ -1,12 +1,13 @@
 from __future__ import absolute_import
 
+from builtins import object
 import time
 import threading
 
 from bd2k.util.threading import BoundedEmptySemaphore
 
 
-class GlobalThrottle:
+class GlobalThrottle(object):
     """
     A thread-safe rate limiter that throttles all threads globally. This should be used to
     regulate access to a global resource. It can be used as a function/method decorator or as a
@@ -58,7 +59,7 @@ class GlobalThrottle:
         return wrapper
 
 
-class LocalThrottle:
+class LocalThrottle(object):
     """
     A thread-safe rate limiter that throttles each thread independently. Can be used as a
     function or method decorator or as a simple object, via its .throttle() method.

@@ -1,8 +1,9 @@
+from builtins import range
 import re
 
 
 def quote(s, level=1):
-    for i in xrange( 0, level ):
+    for i in range( 0, level ):
         s = _quote( s )
     return s
 
