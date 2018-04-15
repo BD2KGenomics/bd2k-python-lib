@@ -1,9 +1,10 @@
+import sys
 from builtins import map
 from builtins import zip
 from builtins import object
 from itertools import takewhile, dropwhile, chain
 try:
-    from itertools import zip_longest as zip_longest
+    from itertools import zip_longest
 except:
     from itertools import izip_longest as zip_longest
 
@@ -49,7 +50,13 @@ def disparate_suffix( xs, ys ):
 
 
 def flatten( iterables ):
-    return chain.from_iterable( iterables )
+    """ Flatten an iterable, except for string elements. """
+    for it in iterables:
+        if isinstance(it, str):
+            yield it
+        else:
+            for element in it:
+                yield element
 
 
 # noinspection PyPep8Naming
@@ -71,7 +78,8 @@ class concat( object ):
 
     Note that concat() flattens (or chains) all iterable arguments into a single result iterable:
 
-    >>> list( concat( 1, xrange( 2, 4 ), 4 ) )
+    >>> from builtins import range
+    >>> list( concat( 1, range( 2, 4 ), 4 ) )
     [1, 2, 3, 4]
 
     It only does so one level deep. If you need to recursively flatten a data structure,
@@ -79,8 +87,9 @@ class concat( object ):
 
     If you want to prevent that flattening for an iterable argument, wrap it in concat():
 
-    >>> list( concat( 1, concat( xrange( 2, 4 ) ), 4 ) )
-    [1, xrange(2, 4), 4]
+    >>> from builtins import range
+    >>> list( concat( 1, concat( range( 2, 4 ) ), 4 ) )
+    [1, range(2, 4), 4]
 
     Some more example.
 
@@ -121,14 +130,16 @@ class concat( object ):
         def expand( x ):
             if isinstance( x, concat ) and len( x.args ) == 1:
                 i = x.args
-            else:
+            elif not isinstance(x, str):
                 try:
                     i = x.__iter__( )
                 except AttributeError:
                     i = x,
+            else:
+                i = x
             return i
 
-        return flatten( list(map( expand, self.args )) )
+        return flatten( map( expand, self.args ) )
 
 
 # noinspection PyPep8Naming
@@ -167,6 +178,8 @@ class crush( object ):
 
     def __iter__( self ):
         def expand( x ):
+            if isinstance(x, str):
+                return x
             try:
                 # Using __iter__() instead of iter() prevents breaking up of strings
                 return crush( x.__iter__( ) )

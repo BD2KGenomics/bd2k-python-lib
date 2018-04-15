@@ -1,5 +1,4 @@
 from builtins import str
-from builtins import next
 from past.builtins import basestring
 def hash_json( hash_obj, value ):
     """
@@ -18,8 +17,9 @@ def hash_json( hash_obj, value ):
     :param value: The value to be hashed
 
     >>> import hashlib
+    >>> from builtins import str
     >>> def actual(x): h = hashlib.md5(); hash_json(h,x); return h.hexdigest()
-    >>> def expect(s): h = hashlib.md5(); h.update(s); return h.hexdigest()
+    >>> def expect(s): h = hashlib.md5(); h.update(s.encode('utf-8')); return h.hexdigest()
 
     >>> actual(0) == expect('0')
     True
@@ -31,7 +31,7 @@ def hash_json( hash_obj, value ):
     True
     >>> actual(False) == expect('false')
     True
-    >>> actual("") == expect('""')
+    >>> actual(u"") == expect(u'""')
     True
     >>> actual([]) == expect('[]')
     True
@@ -54,17 +54,17 @@ def hash_json( hash_obj, value ):
     >>> actual({0:0})
     Traceback (most recent call last):
     ...
-    ValueError: Dictionary keys must be strings, not <type 'int'>
+    ValueError: Dictionary keys must be strings, not type "int".
     >>> actual(object())
     Traceback (most recent call last):
     ...
-    ValueError: Type <type 'object'> is not supported
+    ValueError: Type "object" is not supported.
     """
     try:
-        items = iter(list(value.items( )))
+        items = iter(value.items( ))
     except AttributeError:
         # Must check for string before testing iterability since strings are iterable
-        if isinstance( value, basestring ):
+        if isinstance( value, str ):
             _hash_string( hash_obj, value )
         else:
             try:
@@ -76,7 +76,7 @@ def hash_json( hash_obj, value ):
                 elif isinstance( value, (int, float) ):
                     _hash_number( hash_obj, value )
                 else:
-                    raise ValueError( 'Type %s is not supported' % type( value ) )
+                    raise ValueError( 'Type "%s" is not supported.' % type( value ).__name__ )
             else:
                 _hash_iterable( hash_obj, iterator )
     else:
@@ -84,53 +84,53 @@ def hash_json( hash_obj, value ):
 
 
 def _hash_number( hash_obj, n ):
-    hash_obj.update( str( n ) )
+    hash_obj.update( str( n ).encode('utf-8') )
 
 
 def _hash_bool( hash_obj, b ):
-    hash_obj.update( 'true' if b else 'false' )
+    hash_obj.update( str('true' if b else 'false' ).encode('utf-8'))
 
 
 def _hash_string( hash_obj, s ):
-    hash_obj.update( '"' )
-    hash_obj.update( s )
-    hash_obj.update( '"' )
+    hash_obj.update( '"'.encode('utf-8') )
+    hash_obj.update( s.encode('utf-8') )
+    hash_obj.update( '"'.encode('utf-8') )
 
 
 def _hash_iterable( hash_obj, items ):
-    hash_obj.update( '[' )
+    hash_obj.update( '['.encode('utf-8') )
     try:
         item = next( items )
         hash_json( hash_obj, item )
         while True:
             item = next( items )
-            hash_obj.update( ',' )
+            hash_obj.update( ','.encode('utf-8') )
             hash_json( hash_obj, item )
     except StopIteration:
         pass
-    hash_obj.update( ']' )
+    hash_obj.update( ']'.encode('utf-8') )
 
 
 def _hash_hashable( hash_obj, items ):
     items = iter( sorted( items ) )
-    hash_obj.update( '{' )
+    hash_obj.update( '{'.encode('utf-8') )
     try:
         item = next( items )
         _hash_hashable_item( hash_obj, item )
         while True:
             item = next( items )
-            hash_obj.update( ',' )
+            hash_obj.update( ','.encode('utf-8') )
             _hash_hashable_item( hash_obj, item )
     except StopIteration:
         pass
-    hash_obj.update( '}' )
+    hash_obj.update( '}'.encode('utf-8') )
 
 
 def _hash_hashable_item( hash_obj, k_v ):
     (k, v) = k_v
     if isinstance( k, basestring ):
-        hash_obj.update( k )
-        hash_obj.update( ':' )
+        hash_obj.update( k.encode('utf-8') )
+        hash_obj.update( ':'.encode('utf-8') )
         hash_json( hash_obj, v )
     else:
-        raise ValueError( 'Dictionary keys must be strings, not %s' % type( k ) )
+        raise ValueError( 'Dictionary keys must be strings, not type "%s".' % type( k ).__name__ )

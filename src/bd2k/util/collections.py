@@ -152,7 +152,8 @@ def rindex( l, v ):
     2
     >>> rindex( (0,1,0,1), 0 )
     2
-    >>> rindex( xrange(3), 2 )
+    >>> from builtins import range
+    >>> rindex( range(3), 2 )
     2
     """
     try:

@@ -1,3 +1,4 @@
+from future.utils import raise_
 from builtins import object
 from contextlib import contextmanager
 import sys
@@ -35,7 +36,7 @@ class panic( object ):
         if self.log is not None and exc_info and exc_info[ 0 ]:
             self.log.warn( "Exception during panic", exc_info=exc_info )
         exc_type, exc_value, traceback = self.exc_info
-        raise exc_type, exc_value, traceback
+        raise_(exc_type, exc_value, traceback)
 
 
 class RequirementError( Exception ):
@@ -61,17 +62,17 @@ def require( value, message, *message_args ):
 
     >>> require(1 + 1 == 2, 'You made a terrible mistake')
 
-    >>> require(1 + 1 == 3, 'You made a terrible mistake')
+    >>> require(1 + 1 == 3, 'You made a terrible mistake')  # doctest: +IGNORE_EXCEPTION_DETAIL 
     Traceback (most recent call last):
     ...
     RequirementError: You made a terrible mistake
 
-    >>> require(1 + 1 == 3, 'You made a terrible mistake, %s', 'you fool')
+    >>> require(1 + 1 == 3, 'You made a terrible mistake, %s', 'you fool') # doctest: +IGNORE_EXCEPTION_DETAIL 
     Traceback (most recent call last):
     ...
     RequirementError: You made a terrible mistake, you fool
 
-    >>> require(1 + 1 == 3, 'You made a terrible mistake, %s %s', 'your', 'majesty')
+    >>> require(1 + 1 == 3, 'You made a terrible mistake, %s %s', 'your', 'majesty') # doctest: +IGNORE_EXCEPTION_DETAIL 
     Traceback (most recent call last):
     ...
     RequirementError: You made a terrible mistake, your majesty

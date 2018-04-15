@@ -109,7 +109,8 @@ def ilen( it ):
     """
     Return the number of elements in an iterable
 
-    >>> ilen(xrange(0,100))
+    >>> from builtins import range
+    >>> ilen(range(0,100))
     100
     """
     return sum( 1 for _ in it )

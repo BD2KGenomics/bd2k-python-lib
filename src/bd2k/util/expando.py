@@ -24,13 +24,11 @@ class Expando(dict):
     >>> import json
     >>> s='{"foo":42}'
     >>> o = json.loads(s,object_hook=Expando)
-    >>> o
-    {u'foo': 42}
     >>> o.foo
     42
     >>> o.bar = 'hi'
-    >>> o
-    {u'foo': 42, 'bar': 'hi'}
+    >>> o.bar
+    'hi'
 
     And since Expando is a dict, it serializes back to JSON just fine:
 
