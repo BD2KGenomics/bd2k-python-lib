@@ -61,7 +61,7 @@ def hash_json( hash_obj, value ):
     ValueError: Type <type 'object'> is not supported
     """
     try:
-        items = iter(value.items( ))
+        items = iter(list(value.items( )))
     except AttributeError:
         # Must check for string before testing iterability since strings are iterable
         if isinstance( value, basestring ):

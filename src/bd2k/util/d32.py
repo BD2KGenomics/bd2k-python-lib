@@ -18,7 +18,6 @@ from __future__ import division
 
 # Inspired by Dominic Tarr's JavaScript at https://github.com/dominictarr/d64
 
-from builtins import str
 from builtins import range
 from builtins import object
 from past.utils import old_div
@@ -109,7 +108,7 @@ class D32( object ):
             d[ i + 4 ] = g[ 6 ] << 5 & 255 | g[ 7 ]
             j += 8
             i += 5
-        return bytes( d[ :-padding ] )
+        return str( d[ :-padding ] )
 
 
 # A variant of Base64 that maintains the lexicographical ordering such that for any given list of

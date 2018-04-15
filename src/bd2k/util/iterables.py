@@ -25,7 +25,7 @@ def common_prefix( xs, ys ):
     >>> list( common_prefix('A','B') )
     []
     """
-    return map( lambda x_y: x_y[0], takewhile( lambda a_b: a_b[0] == a_b[1], zip( xs, ys ) ) )
+    return [x_y[0] for x_y in takewhile( lambda a_b: a_b[0] == a_b[1], list(zip( xs, ys )) )]
 
 
 def disparate_suffix( xs, ys ):
@@ -128,7 +128,7 @@ class concat( object ):
                     i = x,
             return i
 
-        return flatten( map( expand, self.args ) )
+        return flatten( list(map( expand, self.args )) )
 
 
 # noinspection PyPep8Naming
@@ -173,4 +173,4 @@ class crush( object ):
             except AttributeError:
                 return x,
 
-        return flatten( map( expand, self.iterables ) )
+        return flatten( list(map( expand, self.iterables )) )

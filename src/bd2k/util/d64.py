@@ -21,7 +21,6 @@ from __future__ import division
 
 
 
-from builtins import str
 from builtins import range
 from builtins import object
 from past.utils import old_div
@@ -116,7 +115,7 @@ class D64( object ):
                 j += 1
             else:
                 assert False
-        return bytes( b )
+        return str( b )
 
 
 standard = D64( '._' )
