@@ -24,18 +24,16 @@ class Expando(dict):
     >>> import json
     >>> s='{"foo":42}'
     >>> o = json.loads(s,object_hook=Expando)
-    >>> o
-    {u'foo': 42}
     >>> o.foo
     42
     >>> o.bar = 'hi'
-    >>> o
-    {u'foo': 42, 'bar': 'hi'}
+    >>> o.bar
+    'hi'
 
     And since Expando is a dict, it serializes back to JSON just fine:
 
-    >>> json.dumps(o)
-    '{"foo": 42, "bar": "hi"}'
+    >>> json.dumps(o, sort_keys=True)
+    '{"bar": "hi", "foo": 42}'
 
     Attributes can be deleted, too:
 
@@ -104,8 +102,8 @@ class MagicExpando(Expando):
     >>> o
     {'foo': 42}
     >>> o.bar.hello = 'hi'
-    >>> o
-    {'foo': 42, 'bar': {'hello': 'hi'}}
+    >>> o.bar
+    {'hello': 'hi'}
     """
     def __getattribute__( self, name ):
         try:

@@ -19,17 +19,17 @@ from __future__ import division
 
 # Ported from JS found at https://github.com/dominictarr/d64
 
-
-
-from builtins import str
+import codecs
+from builtins import bytes
 from builtins import range
 from builtins import object
 from past.utils import old_div
+
 class D64( object ):
     def __init__( self, special_chars ):
         super( D64, self ).__init__( )
         alphabet = 'PYFGCRLAOEUIDHTNSQJKXBMWVZpyfgcrlaoeuidhtnsqjkxbmwvz1234567890'
-        self.alphabet = bytearray( sorted( alphabet + special_chars ) )
+        self.alphabet = bytearray( str(''.join(sorted( alphabet + special_chars))).encode( 'utf-8' ))
         self.lookup = bytearray( 255 )
         for i in range( 64 ):
             code = self.alphabet[ i ]
@@ -38,24 +38,25 @@ class D64( object ):
     def encode( self, data ):
         """
         >>> encode = standard.encode
-        >>> encode('')
+        >>> encode(b'')  # doctest: +ALLOW_UNICODE
         ''
-        >>> encode('\\x00')
+        >>> encode(b'\\x00')  # doctest: +ALLOW_UNICODE
         '..'
-        >>> encode('\\x00\\x01')
+        >>> encode(b'\\x00\\x01')  # doctest: +ALLOW_UNICODE
         '..3'
-        >>> encode('\\x00\\x01\\x02')
+        >>> encode(b'\\x00\\x01\\x02')  # doctest: +ALLOW_UNICODE
         '..31'
-        >>> encode('\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07')
+        >>> encode(b'\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07')  # doctest: +ALLOW_UNICODE
         '..31.kF40VR'
         """
+        data = bytes( data )
         l = len( data )
         s = bytearray( old_div((l * 4 + 2), 3) )
         hang = 0
         j = 0
         a = self.alphabet
         for i in range( l ):
-            v = ord( data[ i ] )
+            v = data[ i ]
             r = i % 3
             if r == 0:
                 s[ j ] = a[ v >> 2 ]
@@ -76,20 +77,21 @@ class D64( object ):
         if l % 3:
             s[ j ] = a[ hang ]
 
-        return str( s )
+        return codecs.decode( s )
 
     def decode( self, e ):
         """
+        >>> import codecs
         >>> decode = standard.decode
-        >>> decode('')
+        >>> codecs.decode(decode(''), 'unicode-escape') # doctest: +ALLOW_UNICODE
         ''
-        >>> decode('..')
+        >>> codecs.decode(decode('..'), 'unicode-escape') # doctest: +ALLOW_UNICODE
         '\\x00'
-        >>> decode('..3')
+        >>> codecs.decode(decode('..3'), 'unicode-escape') # doctest: +ALLOW_UNICODE
         '\\x00\\x01'
-        >>> decode('..31')
+        >>> codecs.decode(decode('..31'), 'unicode-escape') # doctest: +ALLOW_UNICODE
         '\\x00\\x01\\x02'
-        >>> decode('..31.kF40VR')
+        >>> codecs.decode(decode('..31.kF40VR'), 'unicode-escape') # doctest: +ALLOW_UNICODE
         '\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07'
         """
         n = len( e )
@@ -116,7 +118,7 @@ class D64( object ):
                 j += 1
             else:
                 assert False
-        return bytes( b )
+        return bytes(b)
 
 
 standard = D64( '._' )

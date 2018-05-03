@@ -17,8 +17,8 @@ from __future__ import division
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Inspired by Dominic Tarr's JavaScript at https://github.com/dominictarr/d64
-
-from builtins import str
+import codecs
+import sys
 from builtins import range
 from builtins import object
 from past.utils import old_div
@@ -29,7 +29,7 @@ class D32( object ):
 
     def __init__( self, alphabet ):
         super( D32, self ).__init__( )
-        self.alphabet = bytearray( alphabet )
+        self.alphabet = bytearray( alphabet.encode('utf-8') )
         self.lookup = bytearray( 255 )
         for i in range( 32 ):
             self.lookup[ self.alphabet[ i ] ] = i
@@ -37,15 +37,15 @@ class D32( object ):
     def encode( self, d ):
         """
         >>> encode = standard.encode
-        >>> encode('')
+        >>> encode(b'')  # doctest: +ALLOW_UNICODE
         ''
-        >>> encode('\\0')
+        >>> encode(b'\\0')  # doctest: +ALLOW_UNICODE
         '22'
-        >>> encode('\\xff')
+        >>> encode(b'\\xff')  # doctest: +ALLOW_UNICODE
         'zw'
-        >>> encode('\\0\\1\\2\\3\\4')
+        >>> encode(b'\\0\\1\\2\\3\\4')  # doctest: +ALLOW_UNICODE
         '222k62s6'
-        >>> encode('\\0\\1\\2\\3\\4\\5')
+        >>> encode(b'\\0\\1\\2\\3\\4\\5')  # doctest: +ALLOW_UNICODE
         '222k62s62o'
         """
         m = len( d )
@@ -57,7 +57,7 @@ class D32( object ):
 
         while i < m:
             if m - i < 5:
-                g = bytearray( d[ i: ] + '\0' * (5 - (m - i)) )
+                g = bytearray( d[ i: ] + b'\0' * (5 - (m - i)))
             else:
                 g = bytearray( d[ i:i + 5 ] )
             # bit              1          2          3
@@ -74,17 +74,18 @@ class D32( object ):
             e[ j + 7 ] = a[ g[ 4 ] & 31 ]
             j += 8
             i += 5
-        return str( e[ :-padding ] )
+        return codecs.decode( e[ :-padding ], 'ASCII' )
 
     def decode( self, e ):
         """
+        >>> import codecs
         >>> decode = standard.decode
 
         # >>> decode('222k62s62o')
         # '\\x00\\x01\\x02\\x03\\x04\\x05'
         # >>> decode('222k62s6')
         # '\\x00\\x01\\x02\\x03\\x04'
-        >>> decode('zw')
+        >>> codecs.decode(decode('zw'), 'unicode-escape')  # # doctest: +ALLOW_UNICODE
         '\\xff'
         """
         n = len( e )
@@ -109,7 +110,8 @@ class D32( object ):
             d[ i + 4 ] = g[ 6 ] << 5 & 255 | g[ 7 ]
             j += 8
             i += 5
-        return bytes( d[ :-padding ] )
+
+        return bytes(d[ :-padding ])
 
 
 # A variant of Base64 that maintains the lexicographical ordering such that for any given list of

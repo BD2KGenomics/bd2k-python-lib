@@ -6,3 +6,5 @@
 __pycache__/
 /test-report.xml
 /venv/
+.pytest_cache/
+/venv3/

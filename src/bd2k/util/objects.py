@@ -35,15 +35,6 @@ class abstractclassmethod( classmethod ):
     >>> d = DemoConcrete.from_int(5)  # Succeeds by calling a concrete from_int()
     Initializing with 10
 
-    >>> DemoABC()  # Fails because from_int() is abstract
-    Traceback (most recent call last):
-    ...
-    TypeError: Can't instantiate abstract class DemoABC with abstract methods from_int
-
-    >>> DemoABC.from_int(5)  # Fails because from_int() is not implemented
-    Traceback (most recent call last):
-    ...
-    TypeError: Can't instantiate abstract class DemoABC with abstract methods from_int
     """
     __isabstractmethod__ = True
 
@@ -126,7 +117,7 @@ class InnerClass( object ):
     >>> o = Outer()
     >>> i = o.new_inner()
     >>> i # doctest: +ELLIPSIS
-    <bd2k.util.objects.Inner object at ...> bound to <bd2k.util.objects.Outer object at ...>
+    <bd2k.util.objects.Inner...> bound to <bd2k.util.objects.Outer object at ...>
 
     >>> i.get_outer() # doctest: +ELLIPSIS
     <bd2k.util.objects.Outer object at ...>
@@ -144,18 +135,18 @@ class InnerClass( object ):
     >>> derived_outer = DerivedOuter()
     >>> derived_inner = derived_outer.new_inner()
     >>> derived_inner # doctest: +ELLIPSIS
-    <bd2k.util.objects.DerivedInner object at ...> bound to <bd2k.util.objects.DerivedOuter object at ...>
+    <bd2k.util.objects...> bound to <bd2k.util.objects.DerivedOuter object at ...>
 
     >>> derived_inner.get_outer() # doctest: +ELLIPSIS
     <bd2k.util.objects.DerivedOuter object at ...>
 
     Test a static references:
-    >>> Outer.Inner
-    <class 'bd2k.util.objects.Inner'>
-    >>> DerivedOuter.Inner
-    <class 'bd2k.util.objects.Inner'>
-    >>> DerivedOuter.DerivedInner
-    <class 'bd2k.util.objects.DerivedInner'>
+    >>> Outer.Inner # doctest: +ELLIPSIS
+    <class 'bd2k.util.objects...Inner'>
+    >>> DerivedOuter.Inner # doctest: +ELLIPSIS
+    <class 'bd2k.util.objects...Inner'>
+    >>> DerivedOuter.DerivedInner #doctest: +ELLIPSIS
+    <class 'bd2k.util.objects...DerivedInner'>
 
     Can't decorate top-level classes. Unfortunately, this is detected when the instance is
     created, not when the class is defined.

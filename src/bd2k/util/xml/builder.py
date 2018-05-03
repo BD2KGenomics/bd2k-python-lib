@@ -84,24 +84,24 @@ class ElementMaker(object):
 
         >>> import xml.etree.ElementTree as ET
 
-        >>> ET.tostring(E("tag"))
-        '<tag />'
-        >>> ET.tostring(E("tag", "text"))
-        '<tag>text</tag>'
-        >>> ET.tostring(E("tag", "text", key="value"))
-        '<tag key="value">text</tag>'
-        >>> ET.tostring(E("tag", E("subtag", "text"), "tail"))
-        '<tag><subtag>text</subtag>tail</tag>'
+        >>> ET.tostring(E("tag"))  # doctest: +ALLOW_BYTES 
+        b'<tag />'
+        >>> ET.tostring(E("tag", "text"))  # doctest: +ALLOW_BYTES
+        b'<tag>text</tag>'
+        >>> ET.tostring(E("tag", "text", key="value"))  # doctest: +ALLOW_BYTES
+        b'<tag key="value">text</tag>'
+        >>> ET.tostring(E("tag", E("subtag", "text"), "tail"))  # doctest: +ALLOW_BYTES
+        b'<tag><subtag>text</subtag>tail</tag>'
 
     For simple tags, the factory also allows you to write ``E.tag(...)`` instead
     of ``E('tag', ...)``::
 
-        >>> ET.tostring(E.tag())
-        '<tag />'
-        >>> ET.tostring(E.tag("text"))
-        '<tag>text</tag>'
-        >>> ET.tostring(E.tag(E.subtag("text"), "tail"))
-        '<tag><subtag>text</subtag>tail</tag>'
+        >>> ET.tostring(E.tag())  # doctest: +ALLOW_BYTES
+        b'<tag />'
+        >>> ET.tostring(E.tag("text"))  # doctest: +ALLOW_BYTES
+        b'<tag>text</tag>'
+        >>> ET.tostring(E.tag(E.subtag("text"), "tail"))  # doctest: +ALLOW_BYTES
+        b'<tag><subtag>text</subtag>tail</tag>'
 
     Here's a somewhat larger example; this shows how to generate HTML
     documents, using a mix of prepared factory functions for inline elements,

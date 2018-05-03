@@ -49,10 +49,10 @@ def copyfileobj( src, dst, limit=None, bufsize=1024 * 1024 ):
     number of bytes could be read.
 
     >>> import tempfile
-    >>> with open('/dev/urandom') as f1:
+    >>> with open('/dev/urandom', 'rb') as f1:
     ...     with tempfile.TemporaryFile() as f2:
     ...         copyfileobj(f1,f2,limit=100)
-    ...         f2.seek(60)
+    ...         a = f2.seek(60)
     ...         with tempfile.TemporaryFile() as f3:
     ...             copyfileobj(f2,f3), f2.tell(), f3.tell()
     (None, 100, 40)

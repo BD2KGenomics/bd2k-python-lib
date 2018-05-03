@@ -128,7 +128,7 @@ def retryable_http_error( e ):
 def retry_http( delays=default_delays, timeout=default_timeout, predicate=retryable_http_error ):
     """
     >>> i = 0
-    >>> for attempt in retry_http(timeout=5):
+    >>> for attempt in retry_http(timeout=5):  # doctest: +IGNORE_EXCEPTION_DETAIL
     ...     with attempt:
     ...         i += 1
     ...         raise urllib.error.HTTPError('http://www.test.com', '408', 'some message', {}, None)

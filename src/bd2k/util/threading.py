@@ -2,9 +2,14 @@ from __future__ import absolute_import
 from builtins import range
 import sys
 import threading
+from future.utils import raise_
+if sys.version_info >= (3, 0):
+    from threading import BoundedSemaphore
+else:
+    from threading import _BoundedSemaphore as BoundedSemaphore
 
 
-class BoundedEmptySemaphore( threading._BoundedSemaphore ):
+class BoundedEmptySemaphore( BoundedSemaphore ):
     """
     A bounded semaphore that is initially empty.
     """
@@ -62,7 +67,7 @@ class ExceptionalThread( threading.Thread ):
         if not self.is_alive( ) and self.exc_info is not None:
             type, value, traceback = self.exc_info
             self.exc_info = None
-            raise type, value, traceback
+            raise_(type, value, traceback)
 
 
 # noinspection PyPep8Naming
@@ -70,8 +75,9 @@ class defaultlocal( threading.local ):
     """
     Thread local storage with default values for each field in each thread
 
+    >>>
     >>> l = defaultlocal( foo=42 )
-    >>> def f(): print l.foo
+    >>> def f(): print(l.foo)
     >>> t = threading.Thread(target=f)
     >>> t.start() ; t.join()
     42
