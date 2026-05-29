@@ -18,7 +18,7 @@ kwargs = dict(
     install_requires=[ 'future' ],
     setup_requires=['pytest-runner'],
     tests_require=[
-        'pytest==3.5.0',
+        'pytest==9.0.3',
         'mock==1.0.1',
         'lockfile==0.11.0',
         'boto==2.38.0'],
